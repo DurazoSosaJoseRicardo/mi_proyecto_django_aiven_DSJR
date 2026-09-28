@@ -4,3 +4,9 @@ venv/
 .env
 # __pycache__/: archivos compilados que Python genera solo, no son código fuente
 __pycache__/
+# env/: segundo entorno virtual, tampoco se sube
+env/
+# db.sqlite3: base local que ya no se usa (ahora es MySQL en Aiven)
+db.sqlite3
+# staticfiles/: la genera collectstatic en Render
+staticfiles/

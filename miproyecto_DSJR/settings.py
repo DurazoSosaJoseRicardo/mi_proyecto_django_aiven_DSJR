@@ -26,13 +26,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-odjv7*7s3u4@z#a14opa7i(-4+&33txq8t_p3askg2&qpq4)09'
+# SECRET_KEY: en Render se lee de la variable SECRET_KEY; en tu compu usa este valor por defecto
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-odjv7*7s3u4@z#a14opa7i(-4+&33txq8t_p3askg2&qpq4)09')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG: apagado por defecto (producción); en tu .env lo prendes con DEBUG=True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS: dominios desde los que Django acepta visitas, separados por comas
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+
+# CSRF_TRUSTED_ORIGINS: orígenes https confiables, necesario para el login de /admin en Render
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
 
 
 # Application definition
