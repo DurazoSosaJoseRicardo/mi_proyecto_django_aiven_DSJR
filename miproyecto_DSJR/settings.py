@@ -26,14 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECRET_KEY: en Render se lee de la variable SECRET_KEY; en tu compu usa este valor por defecto
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-odjv7*7s3u4@z#a14opa7i(-4+&33txq8t_p3askg2&qpq4)09')
+# SECRET_KEY: se lee de .env (local) o del panel de Render (producción); ya no está escrita en el código
+SECRET_KEY = config('SECRET_KEY')
 
 # DEBUG: apagado por defecto (producción); en tu .env lo prendes con DEBUG=True
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS: dominios desde los que Django acepta visitas, separados por comas
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 
 # CSRF_TRUSTED_ORIGINS: orígenes https confiables, necesario para el login de /admin en Render
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
@@ -54,9 +54,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-        # WhiteNoiseMiddleware: nueva línea — debe ir justo después de SecurityMiddleware
+    # WhiteNoiseMiddleware: entrega los CSS/JS/imágenes — debe ir justo después de SecurityMiddleware
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -159,6 +159,12 @@ MAILERS = {
 
 # STORAGES: le dice a Django que use whitenoise para comprimir y versionar esos archivos
 STORAGES = {
+    # "default": archivos que suban los usuarios; se deja el sistema normal de Django (obligatorio declararlo)
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    # cierre de la config de "default"
+    },
+    # "staticfiles": tus CSS/JS/imágenes; whitenoise los comprime y les pone una "huella" en el nombre
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     # cierre de la config de "staticfiles"
